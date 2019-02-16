@@ -68,7 +68,7 @@ class KFSDiscordBot extends Client {
 				messageCurrentTotal: 0,
 				messageSessionTotal: 0,
 				commandUsages: [],
-				lastChecked: Number(new Date())
+				lastChecked: Date.now()
 			},
 			status: {randomIters: 0, pos: 0}
 		};
@@ -132,7 +132,7 @@ class KFSDiscordBot extends Client {
 		const storedStats = JSON.parse(fs.readFileSync("modules/stats.json", "utf8")),
 			cachedStats = this.cache.stats;
 
-		storedStats.duration += Number(new Date()) - cachedStats.lastChecked;
+		storedStats.duration += Date.now() - cachedStats.lastChecked;
 
 		const storedUsages = storedStats.commandUsages,
 			cachedUsages = cachedStats.commandUsages;
@@ -161,7 +161,7 @@ class KFSDiscordBot extends Client {
 		cachedStats.messageSessionTotal += cachedStats.messageCurrentTotal;
 		cachedStats.messageCurrentTotal = 0;
 		cachedStats.commandUsages = [];
-		cachedStats.lastChecked = Number(new Date());
+		cachedStats.lastChecked = Date.now();
 	}
 	
 	checkRemoteRequest(site, err, res) {
@@ -269,7 +269,7 @@ class KFSDiscordBot extends Client {
 			toSend = message.cleanContent.replace(/https?:\/\/\S+\.\S+/gi, "")
 				.replace(/(www\.)?(discord\.(gg|me|io)|discordapp\.com\/invite)\/[0-9a-z]+/gi, "");
 		
-		phoneCache.lastMsgTime = Number(new Date());
+		phoneCache.lastMsgTime = Date.now();
 		phoneCache.msgCount++;
 		setTimeout(() => {phoneCache.msgCount--}, 5000);
 		if (message.channel.id == phoneCache.channels[0].id) affected = 1;
@@ -285,7 +285,7 @@ class KFSDiscordBot extends Client {
 		const phoneCache = this.cache.phone;
 		if (this.checkDeletedPhoneChannels()) return;
 
-		const dif = Number(new Date()) - phoneCache.lastMsgTime;
+		const dif = Date.now() - phoneCache.lastMsgTime;
 		if (dif < 1000*3595) {
 			phoneCache.timeout = setTimeout(() => {this.checkPhone()}, dif);
 		} else {
